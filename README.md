@@ -1,3 +1,2 @@
 JavaProject
 ===========
-Java Test Demo!
