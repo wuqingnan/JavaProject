@@ -1,13 +1,29 @@
 package com.shizy.demo.excel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class City {
+public class City implements Comparable<City> {
 
 	private String name;
 	private String alias;
 	private String provice;
 	private String pinyin;
+	private String initial;
+	
+	public City() {
+		
+	}
+	
+	public City(JSONObject object) {
+		if (object != null) {
+			setName(object.optString("name"));
+//			setAlias(object.optString("alias"));
+			setProvice(object.optString("provice"));
+//			setPinyin(object.optString("pinyin"));
+			//setInitial(object.optString("initial"));
+		}
+	}
 	
 	public String getName() {
 		return name;
@@ -41,17 +57,35 @@ public class City {
 		this.pinyin = pinyin;
 	}
 	
+	public String getInitial() {
+		return initial;
+	}
+
+	public void setInitial(String initial) {
+		this.initial = initial;
+	}
+
 	public String toJSONString() {
 		return toJSONString().toString();
 	}
 	
 	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
-		obj.put("name", name);
-		obj.put("alias", alias);
-		obj.put("provice", provice);
-		obj.put("pinyin", pinyin);
+		try {
+			obj.put("name", name);
+//			obj.put("alias", alias);
+			obj.put("provice", provice);
+//			obj.put("pinyin", pinyin);
+			//obj.put("initial", initial);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return obj;
+	}
+
+	@Override
+	public int compareTo(City another) {
+		return getPinyin().compareTo(another.getPinyin());
 	}
 	
 }

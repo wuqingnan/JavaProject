@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -12,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.shizy.demo.pinyin.PinyinUtil;
 
@@ -67,7 +69,7 @@ public class ExcelDemo {
 	
 	public static void cityToJson() {
 		try {
-			JSONArray array = new JSONArray();
+			List<City> cityList = new ArrayList<City>();
 			City city = null;
 			POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("./city.xls"));
 			HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -79,10 +81,38 @@ public class ExcelDemo {
 				city.setAlias(row.getCell(2).getStringCellValue());
 				city.setProvice(row.getCell(3).getStringCellValue());
 				city.setPinyin(PinyinUtil.convertToPinYin(city.getName()));
-				array.put(city.toJSONObject());
+				city.setInitial(PinyinUtil.getAlpha(city.getPinyin()));
+				cityList.add(city);
 			}
+			
+			City[] cities = new City[cityList.size()];
+			cityList.toArray(cities);
+			Arrays.sort(cities);
+			
+			JSONArray array = new JSONArray();
+			String initial = "";
+			JSONArray section = null;
+			JSONObject temp = null;
+			for (int i = 0; i < cities.length; i++) {
+				city = cities[i];
+				if (!city.getInitial().equals(initial)) {
+					initial = city.getInitial();
+					section = new JSONArray();
+				}
+				section.put(cities[i].toJSONObject());
+				if (i + 1 >= cities.length || !city.getInitial().equals(cities[i + 1].getInitial())) {
+					temp = new JSONObject();
+					temp.put("initial", initial);
+					temp.put("list", section);
+					array.put(temp);
+				}
+			}
+			
 			System.out.println(array.toString());
 			array = null;
+			cities = null;
+			cityList.clear();
+			cityList = null;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
