@@ -8,6 +8,7 @@ public class City implements Comparable<City> {
 	private String name;
 	private String alias;
 	private String provice;
+	private String code;
 	private String pinyin;
 	private String initial;
 	
@@ -20,6 +21,7 @@ public class City implements Comparable<City> {
 			setName(object.optString("name"));
 //			setAlias(object.optString("alias"));
 			setProvice(object.optString("provice"));
+			setCode(object.optString("code"));
 //			setPinyin(object.optString("pinyin"));
 			//setInitial(object.optString("initial"));
 		}
@@ -49,6 +51,14 @@ public class City implements Comparable<City> {
 		this.provice = provice;
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	public String getPinyin() {
 		return pinyin;
 	}
@@ -75,6 +85,7 @@ public class City implements Comparable<City> {
 			obj.put("name", name);
 //			obj.put("alias", alias);
 			obj.put("provice", provice);
+			obj.put("code", code);
 //			obj.put("pinyin", pinyin);
 			//obj.put("initial", initial);
 		} catch (JSONException e) {

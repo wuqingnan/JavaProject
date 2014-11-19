@@ -80,6 +80,13 @@ public class ExcelDemo {
 				city.setName(row.getCell(1).getStringCellValue());
 				city.setAlias(row.getCell(2).getStringCellValue());
 				city.setProvice(row.getCell(3).getStringCellValue());
+				if (row.getCell(4).getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+					city.setCode("" + row.getCell(4).getNumericCellValue());
+				} else if (row.getCell(4).getCellType() == HSSFCell.CELL_TYPE_STRING) {
+					city.setCode(row.getCell(4).getStringCellValue());
+				} else {
+					throw new IllegalArgumentException();
+				}
 				city.setPinyin(PinyinUtil.convertToPinYin(city.getName()));
 				city.setInitial(PinyinUtil.getAlpha(city.getPinyin()));
 				cityList.add(city);
